@@ -1,0 +1,26 @@
+name: Weekly release
+
+on:
+  schedule:
+    - cron:  '0 20 * * 0'
+
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: github.ref == 'refs/heads/main'
+        with:
+          repo_token: "${{secrets.GITHUB_TOKEN}}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Weekly release"
+          files: |
+            bin/maps.zip
+            bin/quests.zip
+            bin/maps_version.txt
+            bin/quests_version.txt
